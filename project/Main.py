@@ -2,7 +2,7 @@ from builtins import print
 from project import Iris as iris
 from project import Glass as glass
 from project import Spambase as spambase
-from project import Algorithms as alg
+from project import NaiveBayes as nb
 import sys
 
 
@@ -15,7 +15,7 @@ def run_naive_bayes_iris(filename):
         iris_obj = iris.Iris()
         iris_data = iris_obj.setup_data_iris(filename=filename)
         # Start algorithm
-        naive = alg.Algorithms()
+        naive = nb.NaiveBayes()
         # Split the data set into 2/3 and 1/3
         iris_data_train = iris_data.sample(frac=.667)
         iris_data_test = iris_data.drop(iris_data_train.index)
@@ -40,7 +40,7 @@ def run_naive_bayes_glass(filename):
         glass_obj = glass.Glass()
         glass_data = glass_obj.setup_data_glass(filename=filename)
         # Start algorithm
-        naive = alg.Algorithms()
+        naive = nb.NaiveBayes()
         # Split the data set into 2/3 and 1/3
         glass_data_train = glass_data.sample(frac=.667)
         glass_data_test = glass_data.drop(glass_data_train.index)
@@ -65,7 +65,7 @@ def run_naive_bayes_spambase(filename):
         spambase_obj = spambase.Spambase()
         spambase_data = spambase_obj.setup_data_spambase(filename=filename)
         # Start algorithm
-        naive = alg.Algorithms()
+        naive = nb.NaiveBayes()
         # Split the data set into 2/3 and 1/3
         spambase_data_train = spambase_data.sample(frac=.667)
         print(spambase_data_train)

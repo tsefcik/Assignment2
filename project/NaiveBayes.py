@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 
-class Algorithms:
+class NaiveBayes:
 
     # Method used to train the naive bayes classifier
     def naive_bayes_train(self, data, predicted):
