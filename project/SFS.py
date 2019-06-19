@@ -58,6 +58,7 @@ class SFS:
                 base_perf = best_perf
                 feature_set_columns.remove(best_feature)
                 best_features.append(best_feature)
+            # Else, we are done comparing features
             else:
                 break
 
