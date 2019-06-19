@@ -9,7 +9,7 @@ class Glass:
     glass_names = ["Id", "RI", "Na", "Mg", "Al", "Si", "K", "Ca", "Ba", "Fe", "Type of glass"]
     class_we_want = 3
 
-    def setup_data_glass(self, filename):
+    def setup_data_glass(self, filename, target_class):
         # Read in data file and turn into data structure
         glass = pd.read_csv(filename,
                            sep=",",
@@ -18,10 +18,10 @@ class Glass:
 
         # Make categorical column a binary for the class we want to use
         for index, row in glass.iterrows():
-            if glass["Type of glass"][index] > self.class_we_want:
-                glass.at[index, "Type of glass"] = 1
+            if glass[target_class][index] > self.class_we_want:
+                glass.at[index, target_class] = 1
             else:
-                glass.at[index, "Type of glass"] = 0
+                glass.at[index, target_class] = 0
 
         # Get copy of data with columns that will be normalized
         new_glass = glass[glass.columns[1:10]]
@@ -29,15 +29,15 @@ class Glass:
         scaler = preprocessing.MinMaxScaler()
         glass_scaled_data = scaler.fit_transform(new_glass)
         # Remove "Type of glass" column for now since that column will not be normalized
-        self.glass_names.remove("Type of glass")
+        self.glass_names.remove(target_class)
         # Remove "Id number" column for now since that column will not be normalized
         self.glass_names.remove("Id")
         glass_scaled_data = pd.DataFrame(glass_scaled_data, columns=self.glass_names)
         # Add "Type of glass" column back to our column list
-        self.glass_names.append("Type of glass")
+        self.glass_names.append(target_class)
 
         # Add "Type of glass" column into normalized data structure, then categorize it into integers
-        glass_scaled_data["Type of glass"] = glass[["Type of glass"]]
+        glass_scaled_data[target_class] = glass[[target_class]]
 
         # Get mean of each column that will help determine what binary value to turn each into
         glass_means = glass_scaled_data.mean()

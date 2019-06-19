@@ -8,7 +8,7 @@ class Spambase:
 
     class_we_want = "0"
 
-    def setup_data_spambase(self, filename):
+    def setup_data_spambase(self, filename, target_class):
         spambase_names = []
         # Fill soybean_names with column indexes
         for number in range(0, 58):
@@ -26,13 +26,13 @@ class Spambase:
         scaler = preprocessing.MinMaxScaler()
         spambase_scaled_data = scaler.fit_transform(new_spambase)
         # Remove "class" column for now since that column will not be normalized
-        spambase_names.remove("57")
+        spambase_names.remove(target_class)
         spambase_scaled_data = pd.DataFrame(spambase_scaled_data, columns=spambase_names)
         # Add "class" column back to our column list
-        spambase_names.append("57")
+        spambase_names.append(target_class)
 
         # Add "class" column into normalized data structure, then categorize it into integers
-        spambase_scaled_data["57"] = spambase[["57"]]
+        spambase_scaled_data[target_class] = spambase[[target_class]]
 
         # Get mean of each column that will help determine what binary value to turn each into
         spambase_means = spambase_scaled_data.mean()

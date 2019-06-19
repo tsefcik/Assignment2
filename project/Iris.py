@@ -9,7 +9,7 @@ class Iris:
     iris_names = ["sepal length", "sepal width", "petal length", "petal width", "class"]
     class_we_want = "Iris-virginica"
 
-    def setup_data_iris(self, filename):
+    def setup_data_iris(self, filename, target_class):
         # Read in data file and turn into data structure
         iris = pd.read_csv(filename,
                            sep=",",
@@ -18,23 +18,23 @@ class Iris:
 
         # Make categorical column a binary for the class we want to use
         for index, row in iris.iterrows():
-            if iris["class"][index] == self.class_we_want:
-                iris.at[index, "class"] = 1
+            if iris[target_class][index] == self.class_we_want:
+                iris.at[index, target_class] = 1
             else:
-                iris.at[index, "class"] = 0
+                iris.at[index, target_class] = 0
         # Get copy of data with columns that will be normalized
         new_iris = iris[iris.columns[0:4]]
         # Normalize data with sklearn MinMaxScaler
         scaler = preprocessing.MinMaxScaler()
         iris_scaled_data = scaler.fit_transform(new_iris)
         # Remove "class" column for now since that column will not be normalized
-        self.iris_names.remove("class")
+        self.iris_names.remove(target_class)
         iris_scaled_data = pd.DataFrame(iris_scaled_data, columns=self.iris_names)
         # Add "class" column back to our column list
-        self.iris_names.append("class")
+        self.iris_names.append(target_class)
 
         # Add "class" column into normalized data structure, then categorize it into integers
-        iris_scaled_data["class"] = iris[["class"]]
+        iris_scaled_data[target_class] = iris[[target_class]]
 
         # Get mean of each column that will help determine what binary value to turn each into
         iris_means = iris_scaled_data.mean()

@@ -1,4 +1,3 @@
-from builtins import print
 import pandas as pd
 import numpy as np
 
@@ -43,10 +42,6 @@ class NaiveBayes:
                     output.loc[1][index+1] = class_false_means[index]
                     output.loc[2][index+1] = adjusted_true[index]
                     output.loc[3][index+1] = class_true_means[index]
-
-        print("What will be used as our classifier for naive bayes")
-        print(output)
-        print()
 
         return output
 
@@ -93,6 +88,5 @@ class NaiveBayes:
                 success = success + 1
 
         success_rate = (success / data.shape[0]) * 100
-        print("Success rate is: " + str(success_rate) + "%")
         # Return the success rate
         return success_rate
