@@ -69,6 +69,43 @@ class KMeans:
         print(cluster_list)
         return centroids, cluster_list
 
+    """
+    Returns the Euclidean distance between two data points.
+    Uses numpy to handle the complicated math.
+    """
     def euclidean_distance(self, point1, point2):
         distance = np.sqrt(np.sum((point1-point2))**2)
         return distance
+
+    """
+    Returns the silhouette coefficient for clusters.
+    """
+    def silhouette_coefficient(self, cluster):
+        total_dist_0 = 0
+        total_dist_1 = 0
+        count_0 = 0
+        count_1 = 0
+        for point in range(0, len(cluster)):
+            for other_point in range(len(cluster)):
+                if point == 0 and other_point == 0:
+                    current_point = self.data
+                    other_point = self.data.loc[other_point].tolist()
+
+                    dist = self.euclidean_distance(point1=current_point, point2=other_point)
+                    total_dist_0 = total_dist_0 + dist
+                    count_0 = count_0 + 1
+                elif point == 1 and other_point == 1:
+                    current_point = self.data.loc[point].tolist()
+                    other_point = self.data.loc[other_point].tolist()
+
+                    dist = self.euclidean_distance(point1=current_point, point2=other_point)
+                    total_dist_1 = total_dist_1 + dist
+                    count_1 = count_1 + 1
+
+        average_dist_0 = total_dist_0 / count_0
+        average_dist_1 = total_dist_1 / count_1
+
+        print(average_dist_0)
+        print(average_dist_1)
+
+        return average_dist_0, average_dist_1

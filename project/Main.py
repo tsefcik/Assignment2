@@ -114,29 +114,36 @@ def main():
     # sys.stdout = open("./Assignment2Output.txt", "w")
 
     iris_target_class = "class"
-    sfs_iris, sfs_best_data = run_sfs_iris(filename="data/iris.data", target_class=iris_target_class)
+    sfs_iris, sfs_best_data_iris = run_sfs_iris(filename="data/iris.data", target_class=iris_target_class)
     print("Best Feature Selection of Iris: ")
     print(sfs_iris)
-    print(sfs_best_data)
+    print(sfs_best_data_iris)
     print()
-
     # Run k means with k=2 since my data setup normalizes data to be either 0 or 1 for the class we intend to have
-    kmeans = km.KMeans(num_classes=2, data=sfs_best_data)
-    kmeans.kmeans_alg()
+    kmeans_iris = km.KMeans(num_classes=2, data=sfs_best_data_iris)
+    iris_centroids, iris_clusters = kmeans_iris.kmeans_alg()
+
+    iris_coefficient_0, iris_coefficient_1 = kmeans_iris.silhouette_coefficient(iris_clusters)
 
     # glass_target_class = "Type of glass"
-    # sfs_glass, sfs_best_data = run_sfs_glass(filename="data/glass.data", target_class=glass_target_class)
+    # sfs_glass, sfs_best_data_glass = run_sfs_glass(filename="data/glass.data", target_class=glass_target_class)
     # print("Best Feature Selection of Glass: ")
     # print(sfs_glass)
-    # print(sfs_best_data)
+    # print(sfs_best_data_glass)
     # print()
+    # # Run k means with k=2 since my data setup normalizes data to be either 0 or 1 for the class we intend to have
+    # kmeans_glass = km.KMeans(num_classes=2, data=sfs_best_data_glass)
+    # glass_centroids, glass_clusters = kmeans_glass.kmeans_alg()
     #
     # spambase_target_class = "57"
-    # sfs_spambase, sfs_best_data = run_sfs_spambase(filename="data/spambase.data", target_class=spambase_target_class)
+    # sfs_spambase, sfs_best_data_spambase = run_sfs_spambase(filename="data/spambase.data", target_class=spambase_target_class)
     # print("Best Feature Selection of Spambase: ")
     # print(sfs_spambase)
-    # print(sfs_best_data)
+    # print(sfs_best_data_spambase)
     # print()
+    # # Run k means with k=2 since my data setup normalizes data to be either 0 or 1 for the class we intend to have
+    # kmeans_spambase = km.KMeans(num_classes=2, data=sfs_best_data_spambase)
+    # spambase_centroids, spambase_clusters = kmeans_spambase.kmeans_alg()
 
 
 if __name__ == "__main__":
