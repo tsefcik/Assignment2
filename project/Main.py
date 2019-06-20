@@ -7,6 +7,10 @@ from project import KMeans as km
 from project import NaiveBayes as nb
 import sys
 
+"""
+This is the main driver class for Assignment#2.  @author: Tyler Sefcik
+"""
+
 
 # SFS for Iris
 def run_sfs_iris(filename, target_class):
@@ -73,15 +77,18 @@ def run_sfs_glass(filename, target_class):
     # Setup SFS object
     stepwise_forward = sfs.SFS()
 
+    # Setup SFS features to go through
     feature_set_columns = list()
     for feature in glass_data.columns:
         feature_set_columns.append(feature)
     feature_set_columns.remove(target_class)
 
+    # Separate data for taining/testing purposes
     glass_data_train_target_class = glass_data_train[target_class]
     glass_data_train_features = glass_data_train.iloc[:, 0:9]
     glass_data_test_features = glass_data_test.iloc[:, 0:9]
 
+    # Run SFS
     best_features = stepwise_forward.perform_sfs(feature_set_columns=feature_set_columns,
                                                  d_train=glass_data_train_features,
                                                  d_valid=glass_data_test_features,
@@ -115,15 +122,18 @@ def run_sfs_spambase(filename, target_class):
     # Setup SFS object
     stepwise_forward = sfs.SFS()
 
+    # Setup SFS features to go through
     feature_set_columns = list()
     for feature in spambase_data.columns:
         feature_set_columns.append(feature)
     feature_set_columns.remove(target_class)
 
+    # Separate data for taining/testing purposes
     spambase_data_train_target_class = spambase_data_train[target_class]
     spambase_data_train_features = spambase_data_train.iloc[:, 0:58]
     spambase_data_test_features = spambase_data_test.iloc[:, 0:58]
 
+    # Run SFS
     best_features = stepwise_forward.perform_sfs(feature_set_columns=feature_set_columns,
                                                  d_train=spambase_data_train_features,
                                                  d_valid=spambase_data_test_features,
@@ -139,7 +149,7 @@ def run_sfs_spambase(filename, target_class):
 def main():
     # Print all output to file
     # Comment out for printing in console
-    # sys.stdout = open("./Assignment2Output.txt", "w")
+    sys.stdout = open("./Assignment2Output.txt", "w")
 
     ##### Iris #####
     iris_target_class = "class"
@@ -159,10 +169,12 @@ def main():
     print(iris_clusters)
     print()
 
+    # Get silhouette coefficient
     silhouette_coefficient_iris = kmeans_iris.silhouette_coefficient(iris_clusters)
     print("Silhouette coefficient for Iris: " + str(silhouette_coefficient_iris))
     print()
 
+    # Get success rate for comparison
     compare_iris = nb.NaiveBayes()
     success_rate_iris = compare_iris.compare_prediction(iris_clusters, iris_data[iris_target_class])
     print("Success rate for Iris: " + str(success_rate_iris) + "%")
@@ -188,10 +200,12 @@ def main():
     print(glass_clusters)
     print()
 
+    # Get silhouette coefficient
     silhouette_coefficient_glass = kmeans_glass.silhouette_coefficient(glass_clusters)
     print("Silhouette coefficient for Glass: " + str(silhouette_coefficient_glass))
     print()
 
+    # Get success rate for comparison
     compare_glass = nb.NaiveBayes()
     success_rate_glass = compare_glass.compare_prediction(glass_clusters, glass_data[glass_target_class])
     print("Success rate for Glass: " + str(success_rate_glass) + "%")
@@ -218,10 +232,12 @@ def main():
     print(spambase_clusters)
     print()
 
+    # Get silhouette coefficient
     silhouette_coefficient_spambase = kmeans_spambase.silhouette_coefficient(spambase_clusters)
     print("Silhouette coefficient for Spambase: " + str(silhouette_coefficient_spambase))
     print()
 
+    # Get success rate for comparison
     compare_spambase = nb.NaiveBayes()
     success_rate_spambase = compare_spambase.compare_prediction(spambase_clusters, spambase_data[spambase_target_class])
     print("Success rate for Spambase: " + str(success_rate_spambase) + "%")
