@@ -3,6 +3,7 @@ from project import Iris as iris
 from project import Glass as glass
 from project import Spambase as spambase
 from project import SFS as sfs
+from project import KMeans as km
 import sys
 
 
@@ -18,20 +19,26 @@ def run_sfs_iris(filename, target_class):
     # Setup SFS object
     stepwise_forward = sfs.SFS()
 
+    # Setup SFS features to go through
     feature_set_columns = list()
     for feature in iris_data.columns:
         feature_set_columns.append(feature)
     feature_set_columns.remove(target_class)
 
+    # Separate data for taining/testing purposes
     iris_data_train_target_class = iris_data_train[target_class]
     iris_data_train_features = iris_data_train.iloc[:, 0:4]
     iris_data_test_features = iris_data_test.iloc[:, 0:4]
 
+    # Run SFS
     best_features = stepwise_forward.perform_sfs(feature_set_columns=feature_set_columns,
                                                  d_train=iris_data_train_features,
                                                  d_valid=iris_data_test_features,
                                                  predicted=iris_data_train_target_class)
-    return best_features
+    # Return dataset with best features only
+    best_data = iris_data[best_features]
+
+    return best_features, best_data
 
 
 # SFS for Glass
@@ -60,7 +67,11 @@ def run_sfs_glass(filename, target_class):
                                                  d_train=glass_data_train_features,
                                                  d_valid=glass_data_test_features,
                                                  predicted=glass_data_train_target_class)
-    return best_features
+
+    # Return dataset with best features only
+    best_data = glass_data[best_features]
+
+    return best_features, best_data
 
 
 # SFS for Spambase
@@ -89,7 +100,11 @@ def run_sfs_spambase(filename, target_class):
                                                  d_train=spambase_data_train_features,
                                                  d_valid=spambase_data_test_features,
                                                  predicted=spambase_data_train_target_class)
-    return best_features
+
+    # Return dataset with best features only
+    best_data = spambase_data[best_features]
+
+    return best_features, best_data
 
 
 # Main driver to run all algorithms on each dataset
@@ -99,27 +114,29 @@ def main():
     # sys.stdout = open("./Assignment2Output.txt", "w")
 
     iris_target_class = "class"
-    sfs_iris = run_sfs_iris(filename="data/iris.data", target_class=iris_target_class)
+    sfs_iris, sfs_best_data = run_sfs_iris(filename="data/iris.data", target_class=iris_target_class)
     print("Best Feature Selection of Iris: ")
     print(sfs_iris)
+    print(sfs_best_data)
     print()
 
-    glass_target_class = "Type of glass"
-    sfs_glass = run_sfs_glass(filename="data/glass.data", target_class=glass_target_class)
-    print("Best Feature Selection of Glass: ")
-    print(sfs_glass)
-    print()
+    # Run k means with k=2 since my data setup normalizes data to be either 0 or 1 for the class we intend to have
+    kmeans = km.KMeans(num_classes=2, data=sfs_best_data)
+    kmeans.kmeans_alg()
 
-    spambase_target_class = "57"
-    sfs_spambase = run_sfs_spambase(filename="data/spambase.data", target_class=spambase_target_class)
-    print("Best Feature Selection of Spambase: ")
-    print(sfs_spambase)
-    print()
-
-    # # Naive Bayes
-    # naive_iris = run_naive_bayes_iris(filename="data/iris.data")
-    # naive_glass = run_naive_bayes_glass(filename="data/glass.data")
-    # naive_spambase = run_naive_bayes_spambase(filename="data/spambase.data")
+    # glass_target_class = "Type of glass"
+    # sfs_glass, sfs_best_data = run_sfs_glass(filename="data/glass.data", target_class=glass_target_class)
+    # print("Best Feature Selection of Glass: ")
+    # print(sfs_glass)
+    # print(sfs_best_data)
+    # print()
+    #
+    # spambase_target_class = "57"
+    # sfs_spambase, sfs_best_data = run_sfs_spambase(filename="data/spambase.data", target_class=spambase_target_class)
+    # print("Best Feature Selection of Spambase: ")
+    # print(sfs_spambase)
+    # print(sfs_best_data)
+    # print()
 
 
 if __name__ == "__main__":
